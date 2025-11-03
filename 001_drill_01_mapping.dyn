@@ -1,0 +1,288 @@
+{
+  "Uuid": "c4ca059f-73a4-4f0a-9c42-e620b480ab23",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "001_drill_01_mapping",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "DSRevitNodesUI.Categories, DSRevitNodesUI",
+      "SelectedIndex": 732,
+      "SelectedString": "OST_Walls",
+      "Id": "9361bd6fef2248849c61660fc18b1e32",
+      "NodeType": "ExtensionNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "44443e0343834187973ccedb7a8db83e",
+          "Name": "Category",
+          "Description": "The selected Category.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "All built-in categories."
+    },
+    {
+      "ConcreteType": "DSRevitNodesUI.ElementsOfCategory, DSRevitNodesUI",
+      "Id": "797ab5e05d7a44ca97e6be44a7a9e843",
+      "NodeType": "ExtensionNode",
+      "Inputs": [
+        {
+          "Id": "3215e68e637248c9ab5c7f36519ed287",
+          "Name": "Category",
+          "Description": "The Category",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "08d970988ba0489391f9ffdf0f37686a",
+          "Name": "Elements",
+          "Description": "An element class.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Get all elements of the specified category from the model."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "d1c97228b4ee4ff8b43730a8c69224ae",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "f57df5dbaa4046b498ce7e3e0a840eed",
+          "Name": "element",
+          "Description": "Revit.Elements.Element",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "96a5434254f142bea09d55cd3fb0bc83",
+          "Name": "string",
+          "Description": "string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Revit.Elements.Element.Name",
+      "Replication": "Auto",
+      "Description": "Get the Name of the Element\n\nElement.Name: string"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nclr.AddReference('ProtoGeometry')\r\nfrom Autodesk.DesignScript.Geometry import *\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\n\r\n# Assign your output to the OUT variable.\r\nOUT = 0\r\n\r\n\r\n# drill_01_mapping\r\n\r\ninput_materials = IN[0]\r\n\r\n# define the MasterFormat mapping dictionary\r\nmaterial_map = {\r\n    'Exterior Curtain Wall':'08 44 00',\r\n    'Generic - 200mm':'03 30 00',\r\n    'Storefront':'08 41 00',\r\n}\r\n\r\n# function encapsulation\r\n# function: safely maps material names to MasterFormat standard codes.\r\ndef map_material_code(material_name):\r\n    cleaned_name = material_name.strip()\r\n    standard_code = material_map.get(cleaned_name,'NO STANDARD code')\r\n    return standard_code\r\n\r\n# test input list and output results\r\noutput_codes = []\r\nfor material in input_materials:\r\n    code = map_material_code(material)\r\n    output_codes.append(code)\r\n\r\nOUT = output_codes",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "557f4f19f4a34377a44dd4b51b393c39",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "5bf5f795a3304126a58d7343028ccfb5",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "70d693eecb404ffabcd85390915a9a9e",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Watch, CoreNodeModels",
+      "WatchWidth": 200.0,
+      "WatchHeight": 200.0,
+      "Id": "14a9348617754a9493f9c218fe5ba480",
+      "NodeType": "ExtensionNode",
+      "Inputs": [
+        {
+          "Id": "e502da40ef6840b9a9ae6a7f25a375cf",
+          "Name": "",
+          "Description": "Node to show output from",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "f753e823524d4b3a92393c6021e95053",
+          "Name": "",
+          "Description": "Node output",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Visualizes a node's output"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "44443e0343834187973ccedb7a8db83e",
+      "End": "3215e68e637248c9ab5c7f36519ed287",
+      "Id": "6ea0aa2eee0c4a92bbd1a4d05ba8cf66",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "08d970988ba0489391f9ffdf0f37686a",
+      "End": "f57df5dbaa4046b498ce7e3e0a840eed",
+      "Id": "7daa56f203ab4a90ab3822c9577c2a0f",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "96a5434254f142bea09d55cd3fb0bc83",
+      "End": "5bf5f795a3304126a58d7343028ccfb5",
+      "Id": "e4e4f86722a245c6ba9f06c125fa55e5",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "70d693eecb404ffabcd85390915a9a9e",
+      "End": "e502da40ef6840b9a9ae6a7f25a375cf",
+      "Id": "f3e2212be9724b019fe3fb10961a0bc8",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.3",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "8.2",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.3.0.6316",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "9361bd6fef2248849c61660fc18b1e32",
+        "Name": "Categories",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 173.77464362303613,
+        "Y": 187.10660549291586
+      },
+      {
+        "Id": "797ab5e05d7a44ca97e6be44a7a9e843",
+        "Name": "All Elements of Category",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 509.7746436230361,
+        "Y": 187.10660549291586
+      },
+      {
+        "Id": "d1c97228b4ee4ff8b43730a8c69224ae",
+        "Name": "Element.Name",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 866.7746436230361,
+        "Y": 187.10660549291586
+      },
+      {
+        "Id": "557f4f19f4a34377a44dd4b51b393c39",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1179.7746436230361,
+        "Y": 187.10660549291586
+      },
+      {
+        "Id": "14a9348617754a9493f9c218fe5ba480",
+        "Name": "Watch",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1453.7746436230361,
+        "Y": 187.10660549291583
+      }
+    ],
+    "Annotations": [],
+    "X": -121.26103695720894,
+    "Y": 10.152321056723736,
+    "Zoom": 1.0190537197307612
+  }
+}
