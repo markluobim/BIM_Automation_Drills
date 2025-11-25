@@ -1,0 +1,286 @@
+{
+  "Uuid": "7a257d1d-713f-47b2-acca-6ad7f78c3298",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "008_drill_3C_list_operation_(batch_unit_conversion)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "DSRevitNodesUI.Categories, DSRevitNodesUI",
+      "SelectedIndex": 624,
+      "SelectedString": "OST_StructuralFraming",
+      "Id": "37a6017b425d4524a1db45f08ee4c961",
+      "NodeType": "ExtensionNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "6d7a9bb5937d4166858d8e630fbe2e6b",
+          "Name": "Category",
+          "Description": "The selected Category.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "All built-in categories."
+    },
+    {
+      "ConcreteType": "DSRevitNodesUI.ElementsOfCategory, DSRevitNodesUI",
+      "Id": "04da007b37834a1d875ad6f99494699e",
+      "NodeType": "ExtensionNode",
+      "Inputs": [
+        {
+          "Id": "c421561b2eff4292bbff37f66134a2c3",
+          "Name": "Category",
+          "Description": "The Category",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "5d5d5d1d283b4bd09fcec7481d668484",
+          "Name": "Elements",
+          "Description": "An element class.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Get all elements of the specified category from the model."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.CodeBlockNodeModel, DynamoCore",
+      "Id": "32e631942a1b4c4a86dca68778456403",
+      "NodeType": "CodeBlockNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "293149e9dfd24333bed961abc45008e3",
+          "Name": "",
+          "Description": "Value of expression at line 1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows for DesignScript code to be authored directly",
+      "Code": "\"Length\";"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "476c4a68a70b44439745d89a403bb690",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "d64eaf7bee334231a69e817d6b9f7688",
+          "Name": "element",
+          "Description": "Revit.Elements.Element",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "58d144cf89974f388529907c5cd2e517",
+          "Name": "parameterName",
+          "Description": "The name of the parameter whose value you want to obtain.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "e3f3dde0686f4814b06005fc41d0f864",
+          "Name": "var[]..[]",
+          "Description": "var[]..[]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Revit.Elements.Element.GetParameterValueByName@string",
+      "Replication": "Auto",
+      "Description": "Get the value of one of the element's parameters.\n\nElement.GetParameterValueByName (parameterName: string): var[]..[]"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nclr.AddReference('ProtoGeometry')\r\nfrom Autodesk.DesignScript.Geometry import *\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\n\r\n# Assign your output to the OUT variable.\r\nOUT = 0\r\n\r\n\r\n# drill_3C_list_operation_(batch_unit_conversion)\r\n\r\n# list of Structural Framing Lengths in raw millimeter\r\nlengths_in_mm_raw = IN[0]\r\n\r\n\r\n# define function to convert units (Millimeters to Feet)\r\n# round to 0 decimal places for practical construction data\r\ndef convert_mm_to_feet(length_in_mm):\r\n    conversion_factor = 0.00328\r\n    return round(length_in_mm * conversion_factor, 0)\r\n\r\n# define function to execute batch process with List Comprehension\r\ndef get_mto_lengths(lengths_in_mm):\r\n    mto_lengths_feet = [\r\n        convert_mm_to_feet(length)\r\n        for length in lengths_in_mm\r\n        if length >= 3000\r\n    ]\r\n    return mto_lengths_feet\r\n\r\n# execute batch process\r\nprocessed_lengths_feet = get_mto_lengths(lengths_in_mm_raw)\r\n\r\nOUT = processed_lengths_feet\r\n",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "35d99855a3a84f7b8c5e2ffe975f85d4",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "b3791d4538614fdcae8b20e5d122d5c7",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "070decd7914043aba86c06de23dfc148",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "6d7a9bb5937d4166858d8e630fbe2e6b",
+      "End": "c421561b2eff4292bbff37f66134a2c3",
+      "Id": "4070766533fc402ba3da3c95845ebc02",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "5d5d5d1d283b4bd09fcec7481d668484",
+      "End": "d64eaf7bee334231a69e817d6b9f7688",
+      "Id": "f6a9e7f56a4c469d87e66eff43c4b1ae",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "293149e9dfd24333bed961abc45008e3",
+      "End": "58d144cf89974f388529907c5cd2e517",
+      "Id": "01db20fa9a2b46e1a7bccef7b1aa515a",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "e3f3dde0686f4814b06005fc41d0f864",
+      "End": "b3791d4538614fdcae8b20e5d122d5c7",
+      "Id": "eca67942b30245289373c5d32f5a0d1f",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.3",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "8.2",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.3.0.6316",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "37a6017b425d4524a1db45f08ee4c961",
+        "Name": "Categories",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 79.68349847253381,
+        "Y": 341.3206317785654
+      },
+      {
+        "Id": "04da007b37834a1d875ad6f99494699e",
+        "Name": "All Elements of Category",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 380.7458084529886,
+        "Y": 341.3206317785654
+      },
+      {
+        "Id": "32e631942a1b4c4a86dca68778456403",
+        "Name": "Code Block",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 493.55457998976465,
+        "Y": 786.0196395608996
+      },
+      {
+        "Id": "476c4a68a70b44439745d89a403bb690",
+        "Name": "Element.GetParameterValueByName",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 733.8541495410963,
+        "Y": 394.4289728666729
+      },
+      {
+        "Id": "35d99855a3a84f7b8c5e2ffe975f85d4",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1125.2136791588491,
+        "Y": 374.9077800609092
+      }
+    ],
+    "Annotations": [],
+    "X": -48.1330235219956,
+    "Y": 18.312181175572277,
+    "Zoom": 0.7347835612911502
+  }
+}
